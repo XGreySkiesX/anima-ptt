@@ -1,61 +1,90 @@
-Txter={}
+Text={}
 
+Tboxes={}
 tdone=true
--- sets up the function's data storage
-tstrings={} -- for properties
-tchars={} -- for individual characters
-ttext={} -- for the text to be written on the screen
+advnum=1
 
---prepares a string and its properties
-function Txter.prep(cd,str,dd,tres,tsound,ssound,size,colr,bcol,bwid,bhi)
-  tdone=false
-  tstrings.advnum=0 -- sets up an advancement system that will be used later
-  Trem.prepSound("adv","Media/Audio/Sound/adv.wav")-- prepare the sound of advancement
-  Trem.prepSound("cancel","Media/Audio/Sound/adv2.wav")-- prepare the sound for the end of the text block
-  Trem.prepSound(tsound,"Media/Audio/Sound/Text/"..tsound..".wav")-- text sound for the text
-  Trem.prepSound(ssound,"Media/Audio/Sound/Text/"..ssound..".wav")-- space sound for the text
-  tchars[cd]={} -- set up the index of the characters
-  tstrings[cd]={} -- set up the index for the properties
-  tstrings[cd].delay=dd --the delay for the letters
-  ttext[cd]="" --setup the text at the index
-  tstrings.timer=0 --setup the timerr
-  tstrings[cd].timerr=tres --the number that the timer will fall back to
-  tstrings[cd].ii=1 --the index for the letters when cycling later
-  tstrings[cd].index=1 --the index for putting the characters into tchars
-  tstrings[cd].ts=tsound --sets the name of the sound for callback purposes
-  tstrings[cd].ss=ssound --need the space sound too
-  tstrings[cd].sh=false --short for "show"
-  tstrings[cd].fnt=love.graphics.newFont(size) --sets the size of the text
-  tstrings[cd].color=colr --Sets the color of the text
-  tstrings[cd].boxc=bcol --the box color
-  tstrings[cd].boxw=bwid --the box width
-  tstrings[cd].boxh=bhi --the box height
-  tstrings[cd].boxy=love.graphics.getHeight()-bhi --the starting y coordinate
-  tstrings[cd].x=5 --the x of the text
-  tstrings[cd].y=tstrings[cd].boxy+5 --the y of the text. Set 5 pixels below the top of the box
-  tstrings[cd].boxy2=love.graphics.getHeight() --sets where the box will start from before being dragged up
-  tstrings[cd].boxd=false --tells if the box is done animating
-  tstrings[cd].done=false --sets if the text is finished
-  -- inserts all the characters individually
-  for char in str:gmatch('.') do
-    mm=tstrings[cd].index
-    tchars[cd][mm]=char
-    tstrings[cd].index=tstrings[cd].index+1
-  end
-end
-
---updates the text so it knows what to type and what not to
-function Txter.tUpd(cd,dt)
-  if not tdone then
-    tstrings.timer=tstrings.timer+dt --update the timer
-    if tstrings.advnum~=0 then --make sure that it's been initiated
-      if not tstrings[cd].boxd and tstrings[cd].sh then --if the box isn't done and the text is ready to be shown...
-        if tstrings[cd].boxy2>tstrings[cd].boxy then --if the box isn't where it should be
-          tstrings[cd].boxy2=tstrings[cd].boxy2-5 --make it where it should be
-        else --or
-          tstrings[cd].boxd=true --set the box as done
+Textbox={
+  string="default string",
+  advance=Sounds.prepSound("Media/Audio/Sound/adv.wav"),
+  cancel=Sounds.prepSound("Media/Audio/Sound/adv2.wav"),
+  tsound=Sounds.prepSound("Media/Audio/Sound/Text/txt1.wav"),
+  tsound=Sounds.prepSound("Media/Audio/Sound/Text/spc1.wav"),
+  fetchcode="",
+  t=0,
+  delay=0.1,
+  active=false,
+  c={255,255,255,255},
+  tc={0,0,0,255},
+  ts=16,
+  y=0,
+  h=0,
+  td=false,
+  bd=false,
+  index=1,
+  text="",
+  new=function(self,o)
+    tdone=false
+    local o=o or {}
+    setmetatable(o,self)
+    self.__index=self
+    o.chars={}
+    if o.string~="" then
+      for char in str:gmatch('.') do
+        table.insert(o.chars,char)
+      end
+    end
+    if o.ssound~="" then
+      o.ssound=Sounds.prepSound("Media/Audio/Sound/Text"..o.ssound..".wav")
+    end
+    if o.tsound=="" then
+      o.tsound=Sounds.prepSound("Media/Audio/Sound/Text"..o.tsound..".wav")
+    end
+    if o.fetchcode~="" then
+      table.insert(Tboxes,o)
+    end
+    return o
+  end,
+  update=function(self,dt)
+    if self.active and self.bd and not self.td and not tdone then
+      self.t=self.t+dt
+      if self.t>self.delay then
+        if self.chars[self.index]==" " then
+          self.ssound:play()
+        else
+          self.tsound:play()
+        end
+        self.text=self.text..self.chars[self.index]
+        self.t=0
+        if self.index==#self.chars then
+          self.td=true
+        else
+          self.index=self.index+1
         end
       end
+    elseif self.active and not self.bd then
+      if self.y>love.graphics.getHeight()-self.h then
+        self.y=self.y-(love.graphics.getHeight()-self.h)/dt
+      else
+        self.bd=true
+      end
+    end
+  end,
+  draw=function(self)
+    if self.active then
+      love.graphics.setColor(self.c)
+      love.graphics.rectangle("fill",0,self.y,love.graphics.getWidth(),self.h)
+      love.graphics.setColor(self.tc)
+      love.graphics.setFont(self.ts)
+      love.graphics.printf(self.text,5,self.y+5,love.graphics.getWidth())
+    end
+  end
+}
+
+--updates the text so it knows what to type and what not to
+function Text.tUpd(cd,dt)
+  if not tdone then
+    tstrings.timer=tstrings.timer+dt --update the timer
       if menuOpen then --make sure the menu isn't open- if it is....
         ttext[cd]=ttext[cd] -- don't change the text
         tstrings[cd].ii=tstrings[cd].ii --don't change this either
@@ -77,11 +106,10 @@ function Txter.tUpd(cd,dt)
       elseif tstrings[cd].ii>#tchars[cd] then --or if the text is done showing
         tstrings[cd].done=true --make sure we know it is
       end
-    end
   end
 end
 --print the shite
-function Txter.printT(cd)
+function Text.printT(cd)
   if not tdone and tstrings[cd].sh then --if all the text isn't done and the text is meant to be shown
     love.graphics.setColor(tstrings[cd].boxc)--set the color to the box
     love.graphics.rectangle("fill",0,tstrings[cd].boxy2,tstrings[cd].boxw,tstrings[cd].boxh) --draw the box
@@ -92,12 +120,12 @@ function Txter.printT(cd)
 end
 
 --set the text to be shown
-function Txter.settf(cd,val)
+function Text.settf(cd,val)
   tstrings[cd].sh=val
 end
 
 --advance the text
-function Txter.advance(ke)
+function Text.advance(ke)
   if ke=="a" then --if the right key is being pressed
     if tstrings.advnum~=0 and not tdone then --if the text isn't done yet
       if tstrings.advnum==#tstrings and tstrings[tstrings.advnum].done then --if the advancer is
@@ -128,21 +156,33 @@ function Txter.advance(ke)
   end
 end
 
---for printing stats
-function Txter.printadv(cd)
-  if not tdone then
-    love.graphics.setColor({255,255,255,255}) --set the color to white bc wynaut
-    love.graphics.print(tstrings.advnum,0,30) --print the advance number
-    love.graphics.print(tstrings[cd].ii,0,50) --print the index for the chosen text
-    love.graphics.print(#tchars[cd],0,70) --print how many chars are in the chosen text
+--set the text to start going
+function Text.initiate()
+    tdone=false
+    advnum=0
+end
+
+function Text.draw()
+  while not tdone do
+    Tboxes[advnum]:draw()
+    Tboxes[advnum]:update()
   end
 end
 
---set the text to start going
-function Txter.initiate()
-    tstrings.advnum=1 --set the advance number
-    tstrings[1].sh=true --show the first one
+function Text.advance(k)
+  if k=="a" then
+    if Tboxes[advnum].done then
+      Tboxes[advnum]:hide()
+      advnum=advnum+1
+    else
+      Tboxes[advnum].delay=0.1
+    end
+  end
+end
+
+function Text.clear()
+  Tboxes={}
 end
 
 --finally, return everything
-return Txter
+return Text

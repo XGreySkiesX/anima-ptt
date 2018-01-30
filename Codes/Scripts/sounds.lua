@@ -7,9 +7,10 @@ soundlist={}
 mustext=""
 
 --setup sfx
-function Trem.prepSound(name,sr)
-	soundlist[name]=love.audio.newSource(sr,"static") --add to the sound list
-	soundlist[name]:setVolume(.9)--set the volume so it plays over music
+function Trem.prepSound(sr)
+	local tempsound=love.audio.newSource(sr,"static") --make the thing
+	tempsound:setVolume(.9)--set the volume so it plays over music
+	return tempsound
 end
 
 --Play sfx

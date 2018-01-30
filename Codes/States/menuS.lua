@@ -14,8 +14,8 @@ local Q
 
 --stop all previous sounds; set background to menu theme
 function Menu:enter()
-Trem.stopBGM("all")
-Trem.playMus("MenuTheme","Media/Audio/Music/MenuTheme.mp3",0,25)
+--Sounds.stopBGM("all")
+--Sounds.playMus("MenuTheme","Media/Audio/Music/MenuTheme.mp3",0,25)
 end
 
 --check to see what option the player is on
