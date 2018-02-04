@@ -1,7 +1,7 @@
 -- Menu State --
 
 --setup all the images and jazz
-local Menu={}
+local MenuS={}
 local centerx,centery=love.graphics.getWidth()/2,love.graphics.getHeight()/2
 place=1
 local BG=love.graphics.newImage("Media/Graphics/Menu/MenuScreenBG.png")
@@ -13,13 +13,14 @@ local SG
 local Q
 
 --stop all previous sounds; set background to menu theme
-function Menu:enter()
---Sounds.stopBGM("all")
---Sounds.playMus("MenuTheme","Media/Audio/Music/MenuTheme.mp3",0,25)
+function MenuS:enter()
+  Sounds.stopSounds()
+  --menu_theme=Song:new{src="Media/Audio/Music/MenuTheme.mp3"}
+  --menu_theme:play()
 end
 
 --check to see what option the player is on
-function Menu:update(dt)
+function MenuS:update(dt)
 if place == 1 then
 SG=SGA
 Q=QI
@@ -32,7 +33,7 @@ end
 end
 
 --doodle all the jazz
-function Menu:draw()
+function MenuS:draw()
 love.graphics.setColor(255,255,255,255)
 love.graphics.draw(BG,0,0)
 love.graphics.draw(SG,centerx-238,centery-100)
@@ -40,7 +41,7 @@ love.graphics.draw(Q,centerx-238,centery+100)
 end
 
 --check for them keys
-function Menu:keypressed(nuk)
+function MenuS:keypressed(nuk)
 if nuk == "up" then
 if place==1 then
 place=2
@@ -69,4 +70,4 @@ return nil
 end
 end
 
-return Menu
+return MenuS

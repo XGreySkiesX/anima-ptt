@@ -3,22 +3,23 @@
 Gamestate= require("Codes.Scripts.gamestate")
 
 -- Game States --
-Opening=require("Codes.States.splashS")
-Menu=require("Codes.States.menuS")
+Splash=require("Codes.States.splashS")
+MenuScreen=require("Codes.States.menuS")
 Game=require("Codes.States.gameS")
 MR=require("Codes.States.MusicRoomS")
 -- END --
 
 -- Scripts --
 Sounds=require("Codes.Scripts.sounds")
-M=require("Codes.Scripts.M")
-Entities=require("Codes.Scripts.Entities4")
-Txt=require("Codes.Scripts.txt2")
+Display=require("Codes.Scripts.display")
+Entities=require("Codes.Scripts.entities")
+Text=require("Codes.Scripts.text")
 Collide=require("Codes.Scripts.collisions")
+Util=require("Codes.Scripts.utilities")
 -- END --
 
---Set the title here, let Gamestate do it's magic (aka, switch to the Splash screen)
+--Switch to splash
 function love.load()
   Gamestate.registerEvents()
-  Gamestate.switch(Opening)
+  Gamestate.switch(Splash)
 end

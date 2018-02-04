@@ -26,10 +26,10 @@ function Entities.prepObj(name,x,y,height,width,color,cls)
   objects[name].class=cls
   objects[name].ground=objects[name].y
 
-  objects[name].left={objects[name].x-1,objects[name].y+1,objects[name].x-1,objects[name].y+objects[name].h-1}
-  objects[name].right={objects[name].x+objects[name].w+1,objects[name].y+1,objects[name].x+objects[name].w+1,objects[name].y+objects[name].h-1}
-  objects[name].top={objects[name].x+1,objects[name].y-1,objects[name].x+objects[name].w-1,objects[name].y-1}
-  objects[name].bottom={objects[name].x+1,objects[name].y+objects[name].h+1,objects[name].x+objects[name].w-1,objects[name].y+objects[name].h+1}
+  objects[name].left={objects[name].x-1,objects[name].y,objects[name].x-1,objects[name].y+objects[name].h}
+  objects[name].right={objects[name].x+objects[name].w+1,objects[name].y,objects[name].x+objects[name].w+1,objects[name].y+objects[name].h}
+  objects[name].top={objects[name].x,objects[name].y-1,objects[name].x+objects[name].w,objects[name].y-1}
+  objects[name].bottom={objects[name].x,objects[name].y+objects[name].h+1,objects[name].x+objects[name].w,objects[name].y+objects[name].h+1}
 end
 
 --***********************************E N T I T I E S*****************************************--
@@ -51,15 +51,51 @@ function Entities.prepEntity(ename,src,px,py,cl,cls,spd,grv,jh)
   objects[ename].jump_height=jh
   objects[ename].jump=false
 
-  objects[ename].left={objects[ename].x-1,objects[ename].y+2,objects[ename].x-1,objects[ename].y+objects[ename].h-2}
-  objects[ename].right={objects[ename].x+objects[ename].w+1,objects[ename].y+2,objects[ename].x+objects[ename].w+1,objects[ename].y+objects[ename].h-2}
-  objects[ename].top={objects[ename].x-2,objects[ename].y-1,objects[ename].x+objects[ename].w+2,objects[ename].y-1}
-  objects[ename].bottom={objects[ename].x-2,objects[ename].y+objects[ename].h+1,objects[ename].x+objects[ename].w+2,objects[ename].y+objects[ename].h+1}
+  objects[ename].left={objects[ename].x,objects[ename].y,objects[ename].x,objects[ename].y+objects[ename].h}
+  objects[ename].right={objects[ename].x+objects[ename].w,objects[ename].y,objects[ename].x+objects[ename].w,objects[ename].y+objects[ename].h}
+  objects[ename].top={objects[ename].x,objects[ename].y,objects[ename].x+objects[ename].w,objects[ename].y}
+  objects[ename].bottom={objects[ename].x,objects[ename].y+objects[ename].h,objects[ename].x+objects[ename].w,objects[ename].y+objects[ename].h}
+
+  objects[ename].isLeftCol=false
+  objects[ename].isRightCol=false
 end
 
 --===============================P R E P  E N D===========================================--
 
+function Entities.touchOut(ent1,ent2,side)
+  objects[ent2][side].tp1=objects[ent2][side][1]
+  objects[ent2][side].tp2=objects[ent2][side][2]
+  objects[ent2][side].tp3=objects[ent2][side][3]
+  objects[ent2][side].tp4=objects[ent2][side][4]
 
+  objects[ent1].x1,objects[ent1].x2,objects[ent1].y1,objects[ent1].y2=objects[ent1].x,objects[ent1].x+objects[ent1].w,objects[ent1].y,objects[ent1].y+objects[ent1].h
+
+  if side=="left" then
+    objects[ent2][side].tx1=objects[ent2][side].tp1
+    objects[ent2][side].tx2=objects[ent2][side].tp3
+    objects[ent2][side].ty1=objects[ent2][side].tp2
+    objects[ent2][side].ty2=objects[ent2][side].tp4
+  elseif side=="right" then
+    objects[ent2][side].tx1=objects[ent2][side].tp1
+    objects[ent2][side].tx2=objects[ent2][side].tp3
+    objects[ent2][side].ty1=objects[ent2][side].tp2
+    objects[ent2][side].ty2=objects[ent2][side].tp4
+  elseif side=="top" then
+    objects[ent2][side].tx1=objects[ent2][side].tp1
+    objects[ent2][side].tx2=objects[ent2][side].tp3
+    objects[ent2][side].ty1=objects[ent2][side].tp2
+    objects[ent2][side].ty2=objects[ent2][side].tp4
+  elseif side=="bottom" then
+    objects[ent2][side].tx1=objects[ent2][side].tp1
+    objects[ent2][side].tx2=objects[ent2][side].tp3
+    objects[ent2][side].ty1=objects[ent2][side].tp2
+    objects[ent2][side].ty2=objects[ent2][side].tp4
+  end
+
+  if objects[ent1].x2>objects[ent2][side].tx1 and objects[ent1].x1<objects[ent2][side].tx2 and objects[ent1].y2>objects[ent2][side].ty1 and objects[ent1].y1<objects[ent2][side].ty2 then
+    return true
+  end
+end
 
 --===============================C O L L I D E  S T A R T===========================================--
 
@@ -106,8 +142,11 @@ function Entities.collideBlock(entity,block)
 -------------------------------------LEFT--------------------------------------------------
 
     if Entities.touchOut(entity,block,"left") then
-      if love.keyboard.isDown("right") and objects[entity].class=="player" and not menuOpen then
-        Trem.playSound("bump")
+      if objects[entity].class=="player" then
+        if love.keyboard.isDown("right") and not menuOpen then
+          Trem.playSound("bump")
+        end
+        objects["player"].isLeftCol=true
       end
       objects[entity].x=objects[block].x-objects[entity].w
       text="Colliding with "..block.."'s left side."
@@ -141,6 +180,9 @@ function Entities.collideBlock(entity,block)
       end
       objects[entity].y=objects[block].y+objects[block].h
       text="Colliding with "..block.."'s bottom."
+
+
+
     end
 
 -----------------------------------------------------------------------------------------------------------------
@@ -152,42 +194,7 @@ end
 
 --************************************T O U C H I N G- O U T E R*****************************************--
 
-function Entities.touchOut(ent1,ent2,side)
-  objects[ent2].tp1=objects[ent2][side][1]
-  objects[ent2].tp2=objects[ent2][side][2]
-  objects[ent2].tp3=objects[ent2][side][3]
-  objects[ent2].tp4=objects[ent2][side][4]
 
-  objects[ent2].tdistance=math.sqrt((objects[ent2].tp3-objects[ent2].tp1)^2 + (objects[ent2].tp4-objects[ent2].tp2)^2)
-
-  objects[ent1].x1,objects[ent1].x2,objects[ent1].y1,objects[ent1].y2=objects[ent1].x,objects[ent1].x+objects[ent1].w,objects[ent1].y,objects[ent1].y+objects[ent1].h
-
-  if side=="left" then
-    objects[ent2].tx1=objects[ent2].tp1
-    objects[ent2].tx2=objects[ent2].tp1+1
-    objects[ent2].ty1=objects[ent2].tp2
-    objects[ent2].ty2=objects[ent2].tp2+objects[ent2].tdistance
-  elseif side=="right" then
-    objects[ent2].tx1=objects[ent2].tp1+1
-    objects[ent2].tx2=objects[ent2].tp1
-    objects[ent2].ty1=objects[ent2].tp2
-    objects[ent2].ty2=objects[ent2].tp2+objects[ent2].tdistance
-  elseif side=="top" then
-    objects[ent2].tx1=objects[ent2].tp1
-    objects[ent2].tx2=objects[ent2].tp1+objects[ent2].tdistance
-    objects[ent2].ty1=objects[ent2].tp2
-    objects[ent2].ty2=objects[ent2].tp2+1
-  elseif side=="bottom" then
-    objects[ent2].tx1=objects[ent2].tp1
-    objects[ent2].tx2=objects[ent2].tp1+objects[ent2].tdistance
-    objects[ent2].ty1=objects[ent2].tp2+1
-    objects[ent2].ty2=objects[ent2].tp2
-  end
-
-  if objects[ent1].x2>objects[ent2].tx1 and objects[ent1].x1<objects[ent2].tx2 and objects[ent1].y2>objects[ent2].ty1 and objects[ent1].y1<objects[ent2].ty2 then
-    return true
-  end
-end
 
 --************************************T O U C H I N G- I N N E R*****************************************--
 
@@ -250,10 +257,10 @@ end
 function Entities.movePlayer(dt)
   if not menuOpen and tdone then
     if love.keyboard.isDown("right") then
-      objects["player"].x=objects["player"].x+(objects["player"].speed*dt)
+      objects["player"].x=objects["player"].x+math.floor(objects["player"].speed*dt)
     end
     if love.keyboard.isDown("left") then
-      objects["player"].x=objects["player"].x-(objects["player"].speed*dt)
+      objects["player"].x=objects["player"].x-math.floor(objects["player"].speed*dt)
     end
 
 ----------------------------------JUMPING----------------------------------------
@@ -267,13 +274,13 @@ function Entities.movePlayer(dt)
 
 
   if objects["player"].jump or objects["player"].y>objects["player"].ground then
-    objects["player"].y=objects["player"].y+objects["player"].y_velocity*(dt*3)
-    objects["player"].y_velocity= objects["player"].y_velocity-objects["player"].gravity*(dt*3)
+    objects["player"].y=objects["player"].y+math.floor(objects["player"].y_velocity*(dt*3))
+    objects["player"].y_velocity= objects["player"].y_velocity-math.floor(objects["player"].gravity*(dt*3))
   end
 
   if not objects["player"].jump then
-    objects["player"].y=objects["player"].y+objects["player"].y_velocity*(dt*3)
-    objects["player"].y_velocity= objects["player"].y_velocity-objects["player"].gravity*(dt*3)
+    objects["player"].y=objects["player"].y+math.floor(objects["player"].y_velocity*(dt*3))
+    objects["player"].y_velocity= objects["player"].y_velocity-math.floor(objects["player"].gravity*(dt*3))
   end
 
 
@@ -290,7 +297,7 @@ end
 --******************************D R A W I N G   B O U N D S*****************************************--
 
 function Entities.bound(tobound)
-  love.graphics.setColor({255,0,0,255})
+  love.graphics.setColor({0,255,0,255})
   love.graphics.line(objects[tobound].left)
   love.graphics.line(objects[tobound].right)
   love.graphics.line(objects[tobound].top)
@@ -303,10 +310,10 @@ function Entities.boundUpdate(entity)
   objects[entity].x=objects[entity].x
   objects[entity].y=objects[entity].y
 
-  objects[entity].left={objects[entity].x-1,objects[entity].y+2,objects[entity].x-1,objects[entity].y+objects[entity].h-2}
-  objects[entity].right={objects[entity].x+objects[entity].w+1,objects[entity].y,objects[entity].x+objects[entity].w+1,objects[entity].y+objects[entity].h}
-  objects[entity].top={objects[entity].x-1,objects[entity].y-1,objects[entity].x+objects[entity].w+1,objects[entity].y-1}
-  objects[entity].bottom={objects[entity].x-1,objects[entity].y+objects[entity].h+1,objects[entity].x+objects[entity].w+1,objects[entity].y+objects[entity].h+1}
+  objects[entity].left={objects[entity].x,objects[entity].y,objects[entity].x,objects[entity].y+objects[entity].h}
+  objects[entity].right={objects[entity].x+objects[entity].w,objects[entity].y,objects[entity].x+objects[entity].w,objects[entity].y+objects[entity].h}
+  objects[entity].top={objects[entity].x,objects[entity].y,objects[entity].x+objects[entity].w,objects[entity].y}
+  objects[entity].bottom={objects[entity].x,objects[entity].y+objects[entity].h,objects[entity].x+objects[entity].w,objects[entity].y+objects[entity].h}
 end
 
 --===============================B O U N D I N G  E N D===========================================--
@@ -316,13 +323,12 @@ end
 function Entities.debug()
   if deb then
     love.graphics.setColor({255,255,255,255})
-    love.graphics.print("Ground level: "..objects["player"].ground,0,0)
-    love.graphics.print(text,0,15)
-    love.graphics.print("Jumping: "..tostring(objects["player"].jump),0,30)
-    love.graphics.print(objects["plat1"].tx1,0,40)
-    love.graphics.print(objects["plat1"].tx2,0,50)
-    love.graphics.print(objects["plat1"].ty1,0,60)
-    love.graphics.print(objects["plat1"].ty2,0,70)
+    love.graphics.print("Ground level: "..objects["player"].ground,0,20)
+    love.graphics.print(text,0,40)
+    love.graphics.print("Jumping: "..tostring(objects["player"].jump),0,60)
+    love.graphics.print("Upper plat's right side:"..objects["plat2"]["right"].tx1.." "..objects["plat2"]["right"].tx2.." "..objects["plat2"]["right"].ty1.." "..objects["plat2"]["right"].ty2,0,80)
+    love.graphics.print("Player:"..objects["player"].x1.." "..objects["player"].x2.." "..objects["player"].y1.." "..objects["player"].y2,0,100)
+
   end
 end
 

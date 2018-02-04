@@ -1,6 +1,5 @@
 Display={}
 z={}
-cNote={}
 
 Object={
   fetchcode="",
@@ -94,22 +93,26 @@ Button=Object:new{
     self.active=val
   end,
   click=function(self,x,y)
-    if x>=self.x and x<=self.x+self.w and y>=self.y and y<=self.y+self.h then
+    if x>=self.x and x<=self.x+self.w and y>=self.y and y<=self.y+self.h and self.hidden~=true then
       self.active=not self.active
-    else
+    elseif self.hidden or not (x>=self.x and x<=self.x+self.w and y>=self.y and y<=self.y+self.h) then
       self.active=false
     end
   end,
   type="button",
   update=function(self)
-    if posx>=self.x and posx<=self.x+self.w and posy>=self.y and posy<=self.y+self.h then
-      self.hover=true
-    else
-      self.hover=false
-    end
-    if self.active then
-      self:onclick()
-    end
+      posx,posy=love.mouse.getPosition(1)
+      if posx>=self.x and posx<=self.x+self.w and posy>=self.y and posy<=self.y+self.h and not self.hidden then
+        self.hover=true
+      else
+        self.hover=false
+      end
+      if self.hidden then
+        self.active=false
+      end
+      if self.active then
+        self:onclick()
+      end
   end,
   onclick=function()
     return
@@ -117,17 +120,17 @@ Button=Object:new{
 }
 
 PicButton=Button:new{
-  img=love.graphics.newImage("M/settings.png"),
+  src="M/settings.png",
   new=function(self,o)
     local o=o or {}
     setmetatable(o,self)
     self.__index=self
+    o.img=love.graphics.newImage(o.src)
     o.w=o.img:getWidth()
     o.h=o.img:getHeight()
     if o.fetchcode~="" then
       table.insert(z,o)
-    end
-    return o
+    end    return o
   end,
   draw=function(self)
     if not self.hover then
@@ -297,6 +300,34 @@ end
 
 function Display.clear()
   z={}
+end
+
+function Display.getActiveButton(m)
+  if m==nil then
+    local active=nil
+    for i,v in ipairs(z) do
+      if v.active then
+        active=v
+      end
+    end
+    if active==nil then
+      return "none"
+    else
+      return active
+    end
+  else
+    for i,v in ipairs(m.btns) do
+      local active=nil
+      if v.active then
+        active=v
+      end
+    end
+    if active==nil then
+      return "none"
+    else
+      return active
+    end
+  end
 end
 
 return Display
