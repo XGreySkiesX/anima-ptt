@@ -3,7 +3,7 @@ soundlist={}
 
 SFX={
 	volume=.8,
-	src="Media/Audio/Sound/bump.wav",
+	src="M/Audio/Sound/bump.wav",
 	type="sfx",
 	new=function(self,o)
 		local o=o or {}
@@ -25,7 +25,7 @@ Mus={
 	loopstart=0,
 	loopend=0,
 	volume=.5,
-	src="Media/Audio/Music/8bitMain.mp3",
+	src="M/Audio/Music/8bitMain.mp3",
 	new=function(self,o)
 		local o=o or {}
     setmetatable(o,self)

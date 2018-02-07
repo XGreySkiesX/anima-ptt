@@ -4,18 +4,18 @@
 local MenuS={}
 local centerx,centery=love.graphics.getWidth()/2,love.graphics.getHeight()/2
 place=1
-local BG=love.graphics.newImage("Media/Graphics/Menu/MenuScreenBG.png")
-local QA= love.graphics.newImage("Media/Graphics/Menu/Quit_Active.png")
-local QI= love.graphics.newImage("Media/Graphics/Menu/Quit_Inactive.png")
-local SGA= love.graphics.newImage("Media/Graphics/Menu/Start_Game_Active.png")
-local SGI= love.graphics.newImage("Media/Graphics/Menu/Start_Game_Inactive.png")
+local BG=love.graphics.newImage("M/Graphics/Menu/MenuScreenBG.png")
+local QA= love.graphics.newImage("M/Graphics/Menu/Quit_Active.png")
+local QI= love.graphics.newImage("M/Graphics/Menu/Quit_Inactive.png")
+local SGA= love.graphics.newImage("M/Graphics/Menu/Start_Game_Active.png")
+local SGI= love.graphics.newImage("M/Graphics/Menu/Start_Game_Inactive.png")
 local SG
 local Q
 
 --stop all previous sounds; set background to menu theme
 function MenuS:enter()
   Sounds.stopSounds()
-  --menu_theme=Song:new{src="Media/Audio/Music/MenuTheme.mp3"}
+  --menu_theme=Song:new{src="M/Audio/Music/MenuTheme.mp3"}
   --menu_theme:play()
 end
 

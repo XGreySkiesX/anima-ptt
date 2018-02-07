@@ -6,10 +6,10 @@ advnum=0
 
 TextBox={
   string="default string",
-  asrc="Media/Audio/Sound/adv.wav",
-  csrc="Media/Audio/Sound/cancel.wav",
-  tsrc="Media/Audio/Sound/Text/txt4.wav",
-  ssrc="Media/Audio/Sound/Text/spc4.wav",
+  asrc="M/Audio/Sound/adv.wav",
+  csrc="M/Audio/Sound/cancel.wav",
+  tsrc="M/Audio/Sound/Text/txt4.wav",
+  ssrc="M/Audio/Sound/Text/spc4.wav",
   fetchcode="",
   vol=0.5,
   t=0,
@@ -108,12 +108,10 @@ TextBox={
 }
 
 CharacterBox=TextBox:new{
-  imgsrc="Media/Graphics/Sprites/TSs/default.png",
+  imgsrc="M/Graphics/Sprites/TSs/default.png",
   charname="default",
-  asrc="Media/Audio/Sound/adv.wav",
-  csrc="Media/Audio/Sound/cancel.wav",
-  tsrc="Media/Audio/Sound/Text/txt4.wav",
-  ssrc="Media/Audio/Sound/Text/spc4.wav",
+  tsrc="M/Audio/Sound/Text/txt4.wav",
+  ssrc="M/Audio/Sound/Text/spc4.wav",
   new=function(self,o)
     local o=o or {}
     setmetatable(o,self)

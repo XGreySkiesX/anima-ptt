@@ -1,21 +1,20 @@
-
 --setup Gamestates
-Gamestate= require("Codes.Scripts.gamestate")
+Gamestate= require("C.gamestate")
 
 -- Game States --
-Splash=require("Codes.States.splashS")
-MenuScreen=require("Codes.States.menuS")
-Game=require("Codes.States.gameS")
-MR=require("Codes.States.MusicRoomS")
+Splash=require("S.splashS")
+MenuScreen=require("S.menuS")
+Game=require("S.gameS")
+MR=require("S.MusicRoomS")
 -- END --
 
 -- Scripts --
-Sounds=require("Codes.Scripts.sounds")
-Display=require("Codes.Scripts.display")
-Entities=require("Codes.Scripts.entities")
-Text=require("Codes.Scripts.text")
-Collide=require("Codes.Scripts.collisions")
-Util=require("Codes.Scripts.utilities")
+Sounds=require("C.sounds")
+Display=require("C.display")
+Entities=require("C.entities")
+Text=require("C.text")
+Col=require("C.collisions")
+Util=require("C.utilities")
 -- END --
 
 --Switch to splash
