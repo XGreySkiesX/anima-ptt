@@ -11,9 +11,8 @@ MR=require("S.MusicRoomS")
 -- Scripts --
 Sounds=require("C.sounds")
 Display=require("C.display")
-Entities=require("C.entities")
 Text=require("C.text")
-Col=require("C.collisions")
+Obj=require("C.obj")
 Util=require("C.utilities")
 -- END --
 
