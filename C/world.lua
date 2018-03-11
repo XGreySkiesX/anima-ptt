@@ -78,24 +78,21 @@ Level={
 		if self.camera==nil then self.camera=cam or Camera:new{} end
 	end,
 	draw=function(self,co)
-		if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
+		--if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
 	love.graphics.push()
 	love.graphics.setShader(self.shader)
 	if self.camera~=nil then
 		self.camera:update()
 	end
-	self.bgmap:draw()
+	--self.bgmap:draw()
 			self.map:draw()
 		self.player:draw()
 		love.graphics.setShader()
-		for i,v in pairs(self.objects) do
-			v:draw()
-		end
 		love.graphics.pop()
 		if not self.tdone and self.adv>0 then
    	 		self.msgs[self.adv]:draw()
   		end
-		end
+		--end
 	end,
 	detect=function(self,obj)
 		for i,v in ipairs(self.objects) do
@@ -111,8 +108,9 @@ Level={
 	update=function(self,dt)
 	self:scroll(self.player)
 	self:handleflags()
+	if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
 		for i,v in ipairs(self.objects) do
-			if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
+
 			if v.is_g_affected then
 				self:apply_gravity(dt,v)
 			end

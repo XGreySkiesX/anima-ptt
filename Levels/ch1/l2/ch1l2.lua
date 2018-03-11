@@ -4,21 +4,21 @@ lvsrc="Levels/ch1/l2/level.png",
 tdone=true,
 setup=function(self)
 self.tilesheet=TSheet:new{srcs={grass="Levels.ch1.shared.Graphics.Tiles.grass",platform1="Levels.ch1.shared.Graphics.Tiles.platform1"}}
-self.bgsheet=TSheet:new{srcs={sky3="Levels.ch1.shared.Graphics.Tiles.sky3"}}
-self.bgmap=Map:new{src=self.bgsrc,sheet=self.bgsheet}
+--self.bgsheet=TSheet:new{srcs={sky3="Levels.ch1.shared.Graphics.Tiles.sky3"}}
+--self.bgmap=Map:new{src=self.bgsrc,sheet=self.bgsheet}
 self.map=Map:new{src=self.lvsrc,sheet=self.tilesheet}
 self.w=self.map.w*self.map.tilesize
 self.h=self.map.h*self.map.tilesize
 for i,v in ipairs(self.map.platforms) do
 	table.insert(self.objects,Platform:new{x=v.x,y=v.y,w=v.w,h=v.h})
 end
---self.shader=love.graphics.newShader(self.scode)
+self.shader=love.graphics.newShader(self.scode)
 --self.shader:send("screenWidth",self.w)
 self:msg_init()
 end,
 upd_func=function(self)
---self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
---self.shader:send("offset",{self.camera.x,self.camera.y,0})
+self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
+self.shader:send("offset",{self.camera.x,self.camera.y,0})
 return
 end,
 objects={
