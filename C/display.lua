@@ -1,4 +1,4 @@
-Display={}
+local Display={}
 z={}
 
 Object={
@@ -22,16 +22,8 @@ Object={
   hide=function(self)
     self.hidden=true
   end,
-  xslide=function(self,newx,time)
-    if self.x~=newx then
-      self.x=self.x+(newx-self.x)/time
-    end
-  end,
-  yslide=function(self,newy,time)
-    if self.y~=newy then
-      self.y=self.y+(newy-self.y)/time
-    end
-  end,
+  xslide=function(self,newx,time) if self.x~=newx then self.x=self.x+(newx-self.x)/time end end,
+  yslide=function(self,newy,time) if self.y~=newy then self.y=self.y+(newy-self.y)/time end end,
   new=function(self,o)
     local o=o or {}
     setmetatable(o,self)
@@ -130,7 +122,8 @@ PicButton=Button:new{
     o.h=o.img:getHeight()
     if o.fetchcode~="" then
       table.insert(z,o)
-    end    return o
+    end
+    return o
   end,
   draw=function(self)
     if not self.hover then

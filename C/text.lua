@@ -1,12 +1,13 @@
 local Text={}
 
-MessageBoxes={}
-tdone=true
-advnum=0
-
 TextBox={
+  x=0,
+  y=0,
+  w=100,
+  h=100,
+  rad=10,
   string="default string",
-  asrc="M/Audio/Sound/adv.wav",
+  asrc="M/Audio/Sound/adv3.wav",
   csrc="M/Audio/Sound/cancel.wav",
   tsrc="M/Audio/Sound/Text/txt4.wav",
   ssrc="M/Audio/Sound/Text/spc4.wav",
@@ -18,8 +19,8 @@ TextBox={
   c={255,255,255,255},
   tc={0,0,0,255},
   ts=16,
-  y=0,
-  h=0,
+  y=500,
+  h=100,
   td=false,
   bd=false,
   index=1,
@@ -40,19 +41,16 @@ TextBox={
     o.cancel=SFX:new{src=o.csrc}
     o.ssound=SFX:new{src=o.ssrc}
     o.tsound=SFX:new{src=o.tsrc}
-    if o.fetchcode~="" then
-      table.insert(MessageBoxes,o)
-    end
     return o
   end,
   update=function(self,dt)
     if self.active and not self.bd and not self.paused then
       if self.y>love.graphics.getHeight()-self.h then
-        self.y=self.y-10
+        self.y=(self.y-(10))
       else
         self.bd=true
       end
-    elseif self.active and self.bd and self.td~=true and tdone~=true and self.paused~=true then
+    elseif self.active and self.bd and self.td~=true and self.paused~=true then
       self.t=self.t+dt
       if self.t>self.delay then
         if self.chars[self.index]==" " then
@@ -73,10 +71,10 @@ TextBox={
   draw=function(self)
     if self.active then
       love.graphics.setColor(self.c)
-      love.graphics.rectangle("fill",0,self.y,love.graphics.getWidth(),self.h)
+      love.graphics.rectangle("fill",self.x,self.y,self.w,self.h,self.rad)
       love.graphics.setColor(self.tc)
       love.graphics.setNewFont(self.ts)
-      love.graphics.printf(self.text,5,self.y+5,love.graphics.getWidth())
+      love.graphics.printf(self.text,self.x+5,self.y+5,self.w)
     end
   end,
   hide=function(self)
@@ -110,8 +108,8 @@ TextBox={
 CharacterBox=TextBox:new{
   imgsrc="M/Graphics/Sprites/TSs/default.png",
   charname="default",
-  tsrc="M/Audio/Sound/Text/txt4.wav",
-  ssrc="M/Audio/Sound/Text/spc4.wav",
+  tsrc="M/Audio/Sound/Text/txt.wav",
+  ssrc="M/Audio/Sound/Text/spc.wav",
   new=function(self,o)
     local o=o or {}
     setmetatable(o,self)
@@ -128,9 +126,6 @@ CharacterBox=TextBox:new{
     o.cancel=SFX:new{src=o.csrc}
     o.ssound=SFX:new{src=o.ssrc}
     o.tsound=SFX:new{src=o.tsrc}
-    if o.fetchcode~="" then
-      table.insert(MessageBoxes,o)
-    end
     return o
   end,
   draw=function(self)
@@ -147,63 +142,6 @@ CharacterBox=TextBox:new{
     end
   end
 }
-
---set the text to start going
-function Text.initiate()
-    tdone=false
-    advnum=1
-    MessageBoxes[advnum]:show()
-end
-
-function Text.draw()
-  if not tdone and advnum~=0 then
-    MessageBoxes[advnum]:draw()
-  end
-end
-
-function Text.update(dt,m)
-  if not tdone and advnum~=0 then
-    if advnum<=#MessageBoxes then
-      if MessageBoxes[advnum].active and not MessageBoxes[advnum].hidden then
-        MessageBoxes[advnum]:update(dt)
-      else
-        MessageBoxes[advnum]:show()
-      end
-    else
-      Text.stop(m or nil)
-    end
-  end
-end
-
-function Text.advance()
-  if not tdone then
-    if MessageBoxes[advnum].td then
-      MessageBoxes[advnum].advance:play()
-      MessageBoxes[advnum]:hide()
-      MessageBoxes[advnum]:reset()
-      advnum=advnum+1
-    else
-      MessageBoxes[advnum].delay=0.005
-    end
-  end
-end
-
-function Text.stop(m)
-  tdone=true
-  advnum=0
-  if m~=nil then
-    m:set(true)
-  end
-end
-
-function Text.clear(m)
-  MessageBoxes={}
-  tdone=true
-  advnum=0
-  if m~=nil then
-    m:set(true)
-  end
-end
 
 function Text.getCurrentBox(option)
   if advnum>0 then

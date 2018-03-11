@@ -1,8 +1,6 @@
-local Flags={}
-flaglist={}
-
 Flag={
   val=false,
+  name="flag1",	
   set=function(self,val)
     self.val=val
   end,
@@ -13,11 +11,6 @@ Flag={
     local o=o or {}
     setmetatable(o,self)
     self.__index=self
-    if fetchcode~="" then
-      table.insert(flaglist,o)
-    end
     return o
   end
 }
-
-return Flags

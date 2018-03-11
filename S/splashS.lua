@@ -10,7 +10,7 @@ end
 function Splash:update(dt)
   duration=duration-dt
   if duration < 0 then
-    Gamestate.switch(MenuScreen)
+    Gamestate.switch(MS)
   end
 end
 
@@ -24,7 +24,7 @@ end
 
 function Splash:keypressed(key)
   if key then
-    Gamestate.switch(MenuScreen)
+    duration=-1
   end
 end
 

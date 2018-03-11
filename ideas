@@ -1,5 +1,33 @@
-See which sides are colliding instead of just if an object is colliding with a side
+grass.png
+grass.lua {
+	color=blah,
+	coords=more blah,
+	props=blehh
+}
 
-report if Player is colliding and which sides?
+TSheets
+{
+	for i,v in ipairs(self.srcs) do
+			local ti=require(v)
+			local timg=love.graphics.newImage(ti.img)
+			o.static_tiles[i]={}
+			for e,x in pairs(ti.coords) do
+				if not ti.props[e].isanimated then
+					o.static_tiles[i][e]=StaticTileSprite:new{w=x.w,h=x.h,q={x.x,x.y,x.w,x.h,timg:getWidth(),timg:getHeight()},img=timg,props=ti.props[e]}
+				end
+			end
+			o.colors[i]==ti.color
+		end	
+}
 
-run through all objects instead of individual ones??
+Map
+{ 
+	--x,y
+	for i,v in ipairs sheet.colors do
+		if curpixel==color then
+			curtile.x=x
+			curtile.y=y
+			curtile.type=i
+		end
+	end
+}

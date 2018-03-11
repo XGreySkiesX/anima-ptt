@@ -3,28 +3,34 @@ local MusicRoom={}
 
 function MusicRoom:enter()
   Sounds.stopSounds()
-  Text.clear()
   Display.clear()
-  v1=Vector:new(10,10)
-  v2=Vector:new(5,0)
-
+	sh1=TSheet:new{srcs={grass="Levels.ch1.shared.Graphics.Tiles.grass"}}
+	map=Map:new{src="M/Graphics/test.png",sheet=sh1}
+	txt=""
+	color={}
+	imgd=love.image.newImageData("M/Graphics/map_key.png")
+	color.r,color.g,color.b,color.a=imgd:getPixel(0,0)
+	for i,v in pairs(sh1.colors) do
+		txt=txt..i.."\n"
+	end
 end
 
 function MusicRoom:keypressed(k)
 
   if k=="escape" then
-    Gamestate.switch(MenuScreen)
+    Gamestate.switch(MS)
   end
+
 end
 
 function MusicRoom:update(dt)
-  v3=v1+v2
+
 end
 
 function MusicRoom:draw()
-  love.graphics.setColor(255,255,255,255)
-  love.graphics.print(v3.x..", "..v3.y,0,0)
+	map:draw()
+	love.graphics.setColor(255,255,255)
+	love.graphics.print(#map.platforms)
 end
-
 
 return MusicRoom
