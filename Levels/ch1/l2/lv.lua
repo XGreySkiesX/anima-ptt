@@ -1,5 +1,5 @@
 local ch1l1={
-bgsrc="Levels/ch1/l1/ch1l1.png",
+bgsrc="Levels/ch1/l2/bg.png",
 ts_source="Levels/ch1/shared/Graphics/Tiles/ch1.png",
 
 setup=function(self)
@@ -20,7 +20,7 @@ end,
 objects={
 	Player:new{
 	x=10,
-	y=1888,
+	y=928,
 	w=32,
 	h=64,
 	c={255,255,255,255},

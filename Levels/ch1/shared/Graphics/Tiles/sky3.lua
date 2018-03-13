@@ -4,11 +4,23 @@ local sky3={
 	coords={
 		{0,0,32,32},
 		{32,0,32,32},
+		{64,0,32,32},
+		{96,0,32,32},
 		{0,32,32,32},
-		{32,32,32,32}
+		{32,32,32,32},
+		{64,32,32,32},
+		{96,32,32,32},
+		{0,64,32,32},
+		{32,64,32,32},
+		{64,64,32,32},
+		{96,64,32,32},
+		{0,96,32,32},
+		{32,96,32,32},
+		{64,96,32,32},
+		{96,96,32,32}
 	},
 	handle=function(self)
-	local num=math.random(4)
+	local num=math.random(1,#self.coords)
 	return self.coords[num][3],self.coords[num][4],self.coords[num],false,false
 	end
 }

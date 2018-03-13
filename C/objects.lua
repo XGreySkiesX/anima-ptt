@@ -1,5 +1,4 @@
 local Obj={}
-
 --check if something is valid as an item
 function Obj.isItem(i)
 	if type(i)=="table" then
@@ -85,6 +84,9 @@ Item={
 	y=0,
 	w=10,
 	h=10,
+	rotation=0,
+	sx=1,
+	sy=1,
 	max_y=200,
 	pc="none",
 	pc_t=0,
@@ -112,10 +114,10 @@ Item={
 	end,
 	draw=function(self)
 		if self.img~=nil then
-			love.graphics.setColor(self.dc)
+			love.graphics.setColor(self.c)
 			love.graphics.draw(self.img,self.body.tl.x,self.body.tl.y)
 		else
-			love.graphics.setColor(self.dc)
+			love.graphics.setColor(self.c)
 			love.graphics.rectangle(self.mode,self.body.tl.x,self.body.tl.y,self.w,self.h)
 		end
 	end,

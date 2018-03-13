@@ -1,17 +1,21 @@
 -- Game State --
 
 local Game={}
-local lvsrc="ch1.l2.ch1l2"
+Game.lvsrc="ch1.l1.lv"
 
 function Game:enter()
 	Sounds.stopSounds()
 	Display.clear()
+	Game.L=Level:new{src="ch1.l1.lv"}
+	Game.L:setup()
+	Game.L2=Level:new{src="ch1.l1.lv"}
+	Game.L2:setup()
+	Game.L3=Level:new{src="ch1.l1.lv"}
+	Game.L3:setup()
 
 	orig=Vector:new(0,0)
-
-	L=Level:new{src=lvsrc}
-
-	L:setup()
+	txt="."
+	tmr=0
 end
 
 --make the game look for the escape key at all times
@@ -19,20 +23,40 @@ function Game:keypressed(key)
 	if key=="escape" then
 		love.event.quit()
 	end
-	L:keys(key)
+	if Game.loaded then
+		Game.L3:keys(key)
+	end
 end
 
 function Game:update(dt)
-	mx,my=love.mouse.getPosition()
-	--L.player.body:translate(Vector:new(mx*2,my*2))
-	L:update(dt)
+	if Game.loaded then
+		Game.L3:update(dt)
+	else
+
+		tmr=tmr+dt
+		if tmr>1 then
+			if txt=="." then txt=".."
+			elseif txt==".." then txt="..."
+			else txt="." 
+			end
+
+			tmr=0
+		end
+		Game.L:load()
+		Game.L2:load()
+		Game.L3:load()
+		Game.loaded=Game.L.loaded and Game.L2.loaded and Game.L3.loaded
+	end
 end
 
 -- Draw all the diddly-darn things
 function Game:draw()
-	L:draw()
-	love.graphics.setColor(255,255,255)
-	love.graphics.print(L.player.body.center.x..", "..L.player.body.center.y)
+	if Game.loaded then
+		Game.L3:draw()
+	else
+		love.graphics.setColor(255,255,255)
+		love.graphics.print("Loading"..txt.." "..tostring(Game.L3.thread:getError()))
+	end
 end
 
 

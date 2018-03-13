@@ -1,18 +1,18 @@
---Where the magic happens
 Level={
 	timer=0,
 	src="",
 	bgsrc="",
 	lvsrc="",
+	loaded=false,
 	tdone=false,
 	adv=0,
 	sheet_coords={},
 	shader=love.graphics.newShader([[
 	  vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
       vec4 pixel = Texel(texture, texture_coords );
-      if (pixel.r==0.0 && pixel.g==1.0 && pixel.b==1.0){
+      /*if (pixel.r==0.0 && pixel.g==1.0 && pixel.b==1.0){
 				pixel.a=0.0;
-			}
+			}*/
 			return pixel;
     }
 	]]),
@@ -78,21 +78,21 @@ Level={
 		if self.camera==nil then self.camera=cam or Camera:new{} end
 	end,
 	draw=function(self,co)
-		--if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
+		if not self.loaded then return end
 	love.graphics.push()
 	love.graphics.setShader(self.shader)
 	if self.camera~=nil then
 		self.camera:update()
 	end
-	--self.bgmap:draw()
-			self.map:draw()
+		self.bgmap:draw()
+		self.map:draw()
+
 		self.player:draw()
 		love.graphics.setShader()
 		love.graphics.pop()
 		if not self.tdone and self.adv>0 then
    	 		self.msgs[self.adv]:draw()
   		end
-		--end
 	end,
 	detect=function(self,obj)
 		for i,v in ipairs(self.objects) do
@@ -106,22 +106,22 @@ Level={
 			end
 	end,
 	update=function(self,dt)
+		if not self.loaded then return end
 	self:scroll(self.player)
 	self:handleflags()
-	if self.map.isLoaded --[[and self.bgmap.isLoaded]] then
 		for i,v in ipairs(self.objects) do
-
+			if self.tdone then
+				v:update(dt)
+			end
 			if v.is_g_affected then
 				self:apply_gravity(dt,v)
 			end
+			
 				self:detect(v)
-				if self.tdone then
-					v:update(dt)
-				end
+				
 		end
 		self:msg_upd(dt)
 		self:upd_func()
-	end
 	end,
 	keys=function(self,key)
 		if key=="a" and not self.tdone then
