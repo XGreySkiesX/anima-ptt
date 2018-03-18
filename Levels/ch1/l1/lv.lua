@@ -37,7 +37,7 @@ load=function(self)
 				table.insert(self.objects,Platform:new{x=v.x,y=v.y,w=v.w,h=v.h,c={cc,cc*.5,cc*.75,255}})
 				cc=cc-10
 			end
-			-- self.shader=love.graphics.newShader(self.scode)
+			self.shader=love.graphics.newShader(self.scode)
 			self:msg_init()
 			self.tmr=0
 			self.loaded=true
@@ -46,9 +46,9 @@ load=function(self)
 end,
 upd_func=function(self)
 self.tmr=self.tmr+love.timer.getDelta()
--- self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
--- self.shader:send("offset",{self.camera.x,self.camera.y,0})
--- self.shader:send("timer",self.tmr)
+self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
+self.shader:send("offset",{self.camera.x,self.camera.y,0})
+self.shader:send("timer",self.tmr)
 end,
 objects={
 	Player:new{
@@ -93,13 +93,17 @@ vec4 pix=Texel(texture,texture_coords);
 if(pix.r==0.0 && pix.g==1.0 && pix.b==1.0){
 pix.a=0.0;
 }
-if(pix.r==1.0 && pix.g==1.0 && pix.b==1.0){
-	pix=vec4(abs(random(window_coords)/sin(timer)));
+if((pix.r==1.0 && pix.g==1.0 && pix.b==1.0)){
+	pix.rgb=vec3( abs( random(window_coords/timer)*(abs(sin(timer/2))<.5 ? .5 : abs(sin(timer/2))) ) );
+	//pix.rgb=vec3( random(window_coords/timer) );
+	return pix;
+}else if (pix.r==1.0 && pix.g==0.0 && pix.b==0.0){
+	pix.r=( abs(tan(timer/2))<.3 ? .3 : abs(tan(timer/2)) );
+	return pix;
+} else {
+	pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/100),.3,10);
 	return pix;
 }
-pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/100),.3,10);
-
-return pix;
 }
   ]]
 }
