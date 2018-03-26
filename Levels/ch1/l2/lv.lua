@@ -1,4 +1,4 @@
-local ch1l1={
+local ch1l2={
 bgsrc="Levels/ch1/l2/bg.png",
 ts_source="Levels/ch1/shared/Graphics/Tiles/ch1.png",
 
@@ -93,4 +93,4 @@ if(pix.r==0.0 && pix.g==1.0 && pix.b==1.0){
 
 }
 
-return ch1l1
+return ch1l2

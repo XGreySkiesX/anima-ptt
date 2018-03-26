@@ -28,6 +28,7 @@ Mus={
 	loopend=0,
 	volume=.5,
 	playing=false,
+	paused=false,
 	src="M/Audio/Music/MenuTheme.ogg",
 	new=function(self,o)
 		local o=o or {}
@@ -37,7 +38,7 @@ Mus={
 		o.sound:setVolume(o.volume)
 		o.sound:setLooping(o.isloop)
 		if o.loopend=="end" then
-			o.loopend=o.sound:getDuration("seconds")-.2
+			o.loopend=o.sound:getDuration("seconds")-.3
 		end
 		table.insert(soundlist,o)
 		return o
@@ -48,7 +49,7 @@ Mus={
 		end
 	end,
 	update=function(self)
-		if self.isloop==true then
+		if self.isloop and self.playing then
 			self:loop()
 		end
 	end,
@@ -56,10 +57,22 @@ Mus={
 		self.sound:setVolume(vol or 0.5)
 		self.sound:play()
 		self.playing=true
+		self.paused=false
 	end,
 	stop=function(self)
 	self.sound:stop()
 	self.playing=false
+	self.paused=false
+	end,
+	pause=function(self)
+	self.sound:pause()
+	self.playing=false
+	self.paused=true
+	end,
+	resume=function(self)
+	self.sound:resume()
+	self.playing=true
+	self.paused=false
 	end
 }
 

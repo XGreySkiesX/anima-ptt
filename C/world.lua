@@ -3,6 +3,7 @@ Level={
 	src="",
 	bgsrc="",
 	lvsrc="",
+	paused=false,
 	loaded=false,
 	tdone=false,
 	adv=0,
@@ -10,9 +11,9 @@ Level={
 	shader=love.graphics.newShader([[
 	  vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
       vec4 pixel = Texel(texture, texture_coords );
-      /*if (pixel.r==0.0 && pixel.g==1.0 && pixel.b==1.0){
+      if (pixel.r==0.0 && pixel.g==1.0 && pixel.b==1.0){
 				pixel.a=0.0;
-			}*/
+			}
 			return pixel;
     }
 	]]),
@@ -20,33 +21,34 @@ Level={
 	end,
 	upd_func=function(self)
 	end,
-	gravity=200, --gravity constant
+	gravity=200,
+	def_gravity=200,
 	new=function(self,o)
 		local o=o or {}
 		setmetatable(o,self)
 		self.__index=self
+		o.soundlist={}
 		o.objects={}
 		o.msgs={}
 		if o.src~="" then
-			local fl=require("Levels."..o.src)
+			local chunk,err=love.filesystem.load("Levels/"..o.src..".lua")
+			local fl=chunk()
 			for i,v in pairs(fl) do
 				o[i]=v
 			end
+		else
+			return
 		end
 			o.img=love.graphics.newImage(o.lvsrc)
 			o.w=o.img:getWidth()*32
 			o.h=o.img:getHeight()*32
 		if o.w>love.graphics.getWidth() then
 			o.hscroll=true
-			o.fr=love.graphics.getWidth()
-			o.fl=0
 		else
 			o.hscroll=false
 		end
 		if o.h>love.graphics.getHeight() then
 			o.vscroll=true
-			o.ft=0
-			o.fb=love.graphics.getHeight()
 		else
 			o.vscroll=false
 		end
@@ -89,6 +91,11 @@ Level={
 
 		self.player:draw()
 		love.graphics.setShader()
+		for i,v in ipairs(self.objects) do
+			if v.type~="player" and v.type~="ground" and v.type~="platform" then
+				v:draw()
+			end
+		end
 		love.graphics.pop()
 		if not self.tdone and self.adv>0 then
    	 		self.msgs[self.adv]:draw()
@@ -106,25 +113,30 @@ Level={
 			end
 	end,
 	update=function(self,dt)
+		for i,v in ipairs(self.soundlist) do
+			v:update()
+		end
 		if not self.loaded then return end
-	self:scroll(self.player)
-	self:handleflags()
+		if self.paused then return end
+		self:scroll(self.player)
+		self:handleflags()
 		for i,v in ipairs(self.objects) do
 			if self.tdone then
-				v:update(dt)
-			end
+					v:update(dt)
+				end
 			if v.is_g_affected then
 				self:apply_gravity(dt,v)
 			end
-			
+
 				self:detect(v)
-				
+
 		end
 		self:msg_upd(dt)
 		self:upd_func()
 	end,
 	keys=function(self,key)
-		if key=="a" and not self.tdone then
+	if self.paused then return end
+		if key=="space" and not self.tdone then
 			if self.msgs[self.adv].td then
 		      self.msgs[self.adv].advance:play()
 		      self.msgs[self.adv]:hide()
@@ -162,6 +174,9 @@ Level={
 		love.graphics.print(tx,0,580)
 	end,
 	apply_gravity=function(self,dt,obj)
+	if obj.gravity~=nil then self.gravity=obj.gravity else self.gravity=self.def_gravity end
+	obj.max_y=obj.max_y or 100
+	obj.y_velocity=obj.y_velocity or 0
 		if obj.body.bl.y<obj.absolute_y then
 			obj.py=obj.body.tl.y
 			if obj.y_velocity < -(obj.max_y) then
@@ -208,5 +223,19 @@ Level={
 			end
 		end
 		return false
+	end,
+	pause=function(self)
+		self.paused=true
+	end,
+	unpause=function(self)
+		for i,v in ipairs(self.soundlist) do
+			if v.paused then
+				v:resume()
+			end
+		end
+	self.paused=false
+	end,
+	reset=function(Self)
+		self=nil
 	end
 }

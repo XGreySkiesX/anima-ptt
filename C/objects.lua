@@ -99,6 +99,7 @@ Item={
 	mode="fill",
 	type="item",
 	is_g_affected=true,
+	gravity=200,
 	new=function(self,o)
 		local o=o or {}
 		setmetatable(o,self)
@@ -143,11 +144,6 @@ Item={
 		if bp.y<self.body.bl.y then
 			self.y_velocity=0
 		end
-	end,
-	not_colliding=function(self)
-		self.text="Not colliding"
-	end,
-	update=function(self,dt)
 		if self.body.tl.x<=0 then
 			self.body:translate(Vector:new(0,self.body.min.y))
 		end
@@ -157,6 +153,20 @@ Item={
 		if self.body.tr.x>=self.absolute_x then
 			self.body:translate(Vector:new(self.absolute_x-self.w,self.body.min.y))
 		end
+	end,
+	not_colliding=function(self)
+		self.text="Not colliding"
+	end,
+	update=function(self,dt)
+		--[[if self.body.tl.x<=0 then
+			self.body:translate(Vector:new(0,self.body.min.y))
+		end
+		if self.body.bl.y>=self.absolute_y then
+			self.body:translate(Vector:new(self.body.min.x,self.absolute_y-self.h))
+		end
+		if self.body.tr.x>=self.absolute_x then
+			self.body:translate(Vector:new(self.absolute_x-self.w,self.body.min.y))
+		end]]
 	end
 }
 

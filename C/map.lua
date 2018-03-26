@@ -12,17 +12,8 @@ Tile={
 	end
 }
 
---[[AnimatedTile=Tile:new{
-	timer=0,
-	draw=function(self,sheet)
-	self.timer=self.timer+1
-	love.graphics.draw
-	end
-}]]
-
 Map={
 	tilesize=32,
-	bgdrawn=false,
 	isLoaded=false,
 	initialize=true,
 	new=function(self,o)
@@ -35,6 +26,7 @@ Map={
 		o.img=love.image.newImageData(o.src)
 		o.w=o.img:getWidth()
 		o.h=o.img:getHeight()
+		o.progress=0
 		o.sheet=o.sheet
 		if o.initialize then
 			o.consectiles=0

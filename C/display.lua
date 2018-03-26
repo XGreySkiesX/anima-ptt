@@ -53,11 +53,12 @@ Object={
 
 SBox=Object:new{
   draw=function(self)
-    love.graphics.setNewFont(self.ts)
+    if self.fnt==nil then self.fnt=love.graphics.newFont(self.ts) end
+    love.graphics.setFont(self.fnt)
     love.graphics.setColor(self.c)
     love.graphics.rectangle(self.mode,self.x,self.y,self.w,self.h)
     love.graphics.setColor(self.tc)
-    love.graphics.printf(self.text,self.x,self.y,self.w)
+    love.graphics.printf(self.text,self.x+self.fnt:getWidth(self.text)/2,self.y,self.w)
   end,
   setText=function(self,text)
     self.text=text
@@ -69,7 +70,8 @@ Button=Object:new{
   c2={255,255,255,255},
   hc={255,200,200,255},
   draw=function(self)
-    love.graphics.setNewFont(self.ts)
+    if self.fnt==nil then self.fnt=love.graphics.newFont(self.ts) end
+    love.graphics.setFont(self.fnt)
     if self.active then
       love.graphics.setColor(self.c2)
     elseif self.hover then
@@ -79,7 +81,7 @@ Button=Object:new{
     end
     love.graphics.rectangle(self.mode,self.x,self.y,self.w,self.h)
     love.graphics.setColor(self.tc)
-    love.graphics.printf(self.text,self.x,self.y,self.w)
+    love.graphics.printf(self.text,self.x+self.fnt:getWidth(self.text)/2,self.y,self.w)
   end,
   setActive=function(self,val)
     self.active=val

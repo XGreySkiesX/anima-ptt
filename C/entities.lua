@@ -1,4 +1,11 @@
-Entity=Item:new{
+Entity={
+	src="",
+	name="default",
+	x=0,
+	y=0,
+	w=10,
+	h=10,
+
 	c={255,255,255,255},
 	src="",
 	static=false,
@@ -16,6 +23,52 @@ Entity=Item:new{
 		o.jumping=false
 		o.body=Rect:new{x=o.x,y=o.y,w=o.w,h=o.h}
 		return o
+	end,
+	draw=function(self)
+		if self.img~=nil then
+			love.graphics.setColor(self.c)
+			love.graphics.draw(self.img,self.body.tl.x,self.body.tl.y)
+		else
+			love.graphics.setColor(self.c)
+			love.graphics.rectangle(self.mode,self.body.tl.x,self.body.tl.y,self.w,self.h)
+		end
+	end,
+	move=function(self,way,val)
+		if way=="right" then
+			self.x=self.x+val
+		end
+		if way=="left" then
+			self.x=self.x-val
+		end
+		if way=="down" then
+			self.y=self.y+val
+		end
+		if way=="up" then
+			self.y=self.y-val
+		end
+	end,
+	collides=function(self,obj)
+		self.text="Colliding with "..obj.name
+		local md=Obj.m_diff(self,obj)
+		local bp=md:closest_point(orig)
+		self.body:sub_vector(bp)
+		if bp.y<self.body.bl.y then
+			self.y_velocity=0
+		end
+	end,
+	not_colliding=function(self)
+		self.text="Not colliding"
+	end,
+	update=function(self,dt)
+		if self.body.tl.x<=0 then
+			self.body:translate(Vector:new(0,self.body.min.y))
+		end
+		if self.body.bl.y>=self.absolute_y then
+			self.body:translate(Vector:new(self.body.min.x,self.absolute_y-self.h))
+		end
+		if self.body.tr.x>=self.absolute_x then
+			self.body:translate(Vector:new(self.absolute_x-self.w,self.body.min.y))
+		end
 	end
 }
 
