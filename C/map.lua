@@ -68,7 +68,7 @@ Map={
 							end
 
 							curtile.type=i
-							curtile.w,curtile.h,curtile.q,curtile.drawtop,curtile.isplat=o.sheet[i].handle(o.sheet[i],pix,above,below,left,right)
+							curtile.w,curtile.h,curtile.q,curtile.drawtop,curtile.isplat,curtile.shader=o.sheet[i].handle(o.sheet[i],pix,above,below,left,right)
 							curtile.x=x*o.tilesize
 							curtile.y=y*o.tilesize
 							o.consectiles=o.consectiles+1
@@ -78,7 +78,7 @@ Map={
 					end
 					if curtile.type~=nil then
 						if curtile.drawtop then
-							o:add_tile(curtile.x,curtile.y-o.sheet[curtile.type].coords.top[4],curtile.w,curtile.h,o.sheet[curtile.type].img,o.sheet[curtile.type].coords.top,curtile.type)
+							o:add_tile(curtile.x,curtile.y-o.sheet[curtile.type].coords.top[4],curtile.w,curtile.h,o.sheet[curtile.type].img,o.sheet[curtile.type].coords.top,curtile.type,curtile.shader)
 						end
 						if curtile.isplat then
 							if o.consectiles>1 and #o.platforms>0 then
@@ -99,7 +99,7 @@ Map={
 						else
 							o.consectiles=0
 						end
-					o:add_tile(curtile.x,curtile.y,curtile.w,curtile.h,o.sheet[curtile.type].img,curtile.q,curtile.type)
+					o:add_tile(curtile.x,curtile.y,curtile.w,curtile.h,o.sheet[curtile.type].img,curtile.q,curtile.type,curtile.shader)
 					elseif curtile.type==nil then
 						o.consectiles=0
 					end
@@ -109,8 +109,16 @@ Map={
 		o.isLoaded=true
 		return o
 		end,
-		add_tile=function(self,x,y,w,h,img,q,type)
-			table.insert(self.tiles,Tile:new{x=x,y=y,w=w,h=h,imgsrc=img,q=q,type=type})
+		add_tile=function(self,x,y,w,h,img,q,type,shader)
+			table.insert(self.tiles,Tile:new{x=x,y=y,w=w,h=h,imgsrc=img,q=q,type=type,shc=shader or [[
+					vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+					  	vec4 pixel = Texel(texture, texture_coords );
+					  	if (pixel.r==0.0 && pixel.g==1.0 && pixel.b==1.0){
+							pixel.a=0.0;
+					  	}
+						return pixel;
+					}
+				]]})
 		end,
 		draw=function(self)
 			for i,v in ipairs(self.tiles) do
@@ -120,7 +128,12 @@ Map={
 					end
 					v.quad=love.graphics.newQuad(v.q[1],v.q[2],v.q[3],v.q[4],v.img:getWidth(),v.img:getHeight())
 				end
+				if v.shader==nil then
+					v.shader=love.graphics.newShader(v.shc)
+				end
+				love.graphics.setShader(v.shader)
 				love.graphics.draw(v.img,v.quad,v.x,v.y)
+				love.graphics.setShader()
 			end
 		end
 }

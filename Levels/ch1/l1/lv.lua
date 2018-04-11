@@ -4,7 +4,7 @@ bgsrc="Levels/ch1/l1/bg.png",
 lvsrc="Levels/ch1/l1/level.png",
 lvname="ch1l1",
 tile_sources={grass="Levels.ch1.shared.Graphics.Tiles.grass",platform1="Levels.ch1.shared.Graphics.Tiles.platform1",sky3="Levels.ch1.shared.Graphics.Tiles.sky3"},
-bgm_srcs={{"M/Audio/Music/test.wav",83.6,131.7},{"M/Audio/Music/8BitMain.ogg",48,77.35}},
+bgm_srcs={{"M/Audio/Music/test.wav",83.6,131.7},{"M/Audio/Music/8bitMain.ogg",48,77.35}},
 tdone=true,
 setup=function(self)
 self.thread=love.thread.newThread([[
@@ -23,7 +23,7 @@ self.thread=love.thread.newThread([[
 	]])
 self.tilesheet=TSheet:new{srcs=tile_sources}
 self.map=Map:new{src=self.lvsrc,initialize=false}
-self.bgmap=Map:new{src=self.bgsrc,initialize=false}
+-- self.bgmap=Map:new{src=self.bgsrc,initialize=false}
 self.thread:start(self.bgsrc,self.lvsrc,self.tile_sources,self.lvname)
 end,
 load=function(self)
@@ -32,7 +32,7 @@ load=function(self)
 		channels.b=love.thread.getChannel('mp_t_'..self.lvname):pop()
 		channels.c=love.thread.getChannel('mp_p_'..self.lvname):pop()
 		if channels.a and channels.b and channels.c then
-			self.bgmap.tiles=channels.a
+			-- self.bgmap.tiles=channels.a
 			self.map.tiles=channels.b
 			self.map.platforms=channels.c
 			self.w=self.map.w*self.map.tilesize
@@ -59,7 +59,7 @@ load=function(self)
 		end
 end,
 upd_func=function(self)
-self.tmr=self.tmr+love.timer.getDelta()
+self.tmr=love.timer.getTime()
 self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
 self.shader:send("offset",{self.camera.x,self.camera.y,0})
 self.shader:send("timer",self.tmr)
@@ -78,7 +78,7 @@ objects={
 	ground=0,
 	src="Levels/ch1/shared/Graphics/Sprites/player.png",
 	jump_height=210
-	},
+	}--[[,
 	Platform:new{
 		static=false,
 		is_g_affected=true,
@@ -88,20 +88,20 @@ objects={
 		h=50,
 		c={255,255,255,255},
 		type="crate"
-	}
+	}]]
 },
 msgs={
 	[1]=TextBox:new{
 	x=0,y=love.graphics.getHeight(),w=love.graphics.getWidth(),
 	string=Strings.ch1.l1[1],
-	c={0,0,100,150},tc={255,255,255,255},
+	c={0,0,100/255,150/255},tc={1,1,1,1},
 	delay=0.1
 	},
 	[2]=TextBox:new{
 	x=0,y=love.graphics.getHeight(),w=love.graphics.getWidth(),
 	string=Strings.ch1.l1[2],
-	c={0,0,100,150},
-	tc={255,255,255,255},
+	c={0,0,100/255,150/255},
+	tc={1,1,1,1},
 	delay=0.1
 	}
 },
@@ -120,11 +120,11 @@ pix.a=0.0;
 }
 if((pix.r==1.0 && pix.g==1.0 && pix.b==1.0)){
 	pix.rgb=vec3( abs( random(window_coords/timer)*(abs(sin(timer/2))<.5 ? .5 : abs(sin(timer/2))) ) );
-	//pix.rgb=vec3( random(window_coords/timer) );
 }else if (pix.r==1.0 && pix.g==0.0 && pix.b==0.0){
 	pix.r=( abs(tan(timer/2))<.3 ? .3 : abs(tan(timer/2)) );
 } else {
 	pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/100),.3,10);
+	
 }
 return pix;
 }

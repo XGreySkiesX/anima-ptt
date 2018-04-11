@@ -1,5 +1,5 @@
 local sky3={
-	color={r=163,g=73,b=164},
+	color={r=163/255,g=73/255,b=164/255},
 	img="Levels/ch1/shared/Graphics/Tiles/sky3.png",
 	coords={
 		{0,0,32,32},

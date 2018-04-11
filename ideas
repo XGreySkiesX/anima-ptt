@@ -1,33 +1,5 @@
-grass.png
-grass.lua {
-	color=blah,
-	coords=more blah,
-	props=blehh
-}
+TODO:
 
-TSheets
-{
-	for i,v in ipairs(self.srcs) do
-			local ti=require(v)
-			local timg=love.graphics.newImage(ti.img)
-			o.static_tiles[i]={}
-			for e,x in pairs(ti.coords) do
-				if not ti.props[e].isanimated then
-					o.static_tiles[i][e]=StaticTileSprite:new{w=x.w,h=x.h,q={x.x,x.y,x.w,x.h,timg:getWidth(),timg:getHeight()},img=timg,props=ti.props[e]}
-				end
-			end
-			o.colors[i]==ti.color
-		end	
-}
-
-Map
-{ 
-	--x,y
-	for i,v in ipairs sheet.colors do
-		if curpixel==color then
-			curtile.x=x
-			curtile.y=y
-			curtile.type=i
-		end
-	end
-}
+- Rewrite Level{} so that maps, etc are loaded automatically?
+- Rewrite code so that player can push things without penetrating walls (if against block for so long?)
+- Probably rewrite how to handle collisions in general (instead of pulling self out of object, move object around self...?)

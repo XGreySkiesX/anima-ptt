@@ -30,6 +30,8 @@ Level={
 		o.soundlist={}
 		o.objects={}
 		o.msgs={}
+		o.cv1=love.graphics.newCanvas()
+		o.cv2=love.graphics.newCanvas()
 		if o.src~="" then
 			local chunk,err=love.filesystem.load("Levels/"..o.src..".lua")
 			local fl=chunk()
@@ -81,15 +83,30 @@ Level={
 	end,
 	draw=function(self,co)
 		if not self.loaded then return end
-	love.graphics.push()
-	love.graphics.setShader(self.shader)
-	if self.camera~=nil then
-		self.camera:update()
-	end
-		self.bgmap:draw()
+		love.graphics.push()
+		love.graphics.setCanvas(self.cv1)
+		love.graphics.clear()
+		love.graphics.push()
+		if self.camera~=nil then
+			self.camera:update()
+		end
+		if self.bgmap~=nil then
+			self.bgmap:draw()
+		end
 		self.map:draw()
+		love.graphics.pop()
+		love.graphics.setCanvas()
 
+		love.graphics.setCanvas(self.cv2)
+		love.graphics.clear()
+		love.graphics.setShader(self.shader)
+		love.graphics.draw(self.cv1)
+		love.graphics.push()
+		if self.camera~=nil then
+			self.camera:update()
+		end
 		self.player:draw()
+		
 		love.graphics.setShader()
 		for i,v in ipairs(self.objects) do
 			if v.type~="player" and v.type~="ground" and v.type~="platform" then
@@ -97,9 +114,12 @@ Level={
 			end
 		end
 		love.graphics.pop()
+		love.graphics.setCanvas()
+		love.graphics.draw(self.cv2)
+		love.graphics.pop()
 		if not self.tdone and self.adv>0 then
-   	 		self.msgs[self.adv]:draw()
-  		end
+	 		self.msgs[self.adv]:draw()
+		end
 	end,
 	detect=function(self,obj)
 		for i,v in ipairs(self.objects) do
@@ -170,7 +190,7 @@ Level={
 		for i,v in ipairs(self.active_tiles) do
 			tx=tx..v[1]..", "..v[2].." // "
 		end
-		love.graphics.setColor(255,255,255,255)
+		love.graphics.setColor(1.0,1.0,1.0,1.0)
 		love.graphics.print(tx,0,580)
 	end,
 	apply_gravity=function(self,dt,obj)
@@ -230,7 +250,7 @@ Level={
 	unpause=function(self)
 		for i,v in ipairs(self.soundlist) do
 			if v.paused then
-				v:resume()
+				v:play()
 			end
 		end
 	self.paused=false

@@ -82,18 +82,18 @@ function Game:draw()
 		if Game.loaded then
 			Game.L:draw()
 			if Game.L.paused then
-				love.graphics.setColor(0,0,0,150)
+				love.graphics.setColor(0,0,0,150/255)
 				love.graphics.rectangle("fill",0,0,love.graphics.getWidth(),love.graphics.getHeight())
-				love.graphics.setColor(255,255,255,255)
+				love.graphics.setColor(1,1,1,1)
 				love.graphics.setFont(font)
 				love.graphics.print("PAUSED",love.graphics.getWidth()/2-font:getWidth("PAUSED")/2,love.graphics.getHeight()/2-font:getHeight()/2)
 			end
-			love.graphics.setColor(255,255,255)
+			love.graphics.setColor(1,1,1)
 			love.graphics.setFont(font)
 			love.graphics.print(Game.L.objects[2].body.tl.y,0,50)
 			Display.all()
 		else
-			love.graphics.setColor(255,255,255)
+			love.graphics.setColor(1,1,1)
 			love.graphics.setFont(font)
 			love.graphics.print("Loading"..txt,love.graphics.getWidth()/2-font:getWidth("Loading"..txt)/2,love.graphics.getHeight()/2-font:getHeight()/2)
 		end

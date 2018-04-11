@@ -8,8 +8,8 @@ Object={
   y=0,
   w=0,
   h=0,
-  c={255,255,255,255},
-  tc={0,0,0,255},
+  c={1,1,1,1},
+  tc={0,0,0,1},
   ts=16,
   text="test",
   mode="fill",
@@ -67,8 +67,8 @@ SBox=Object:new{
 }
 
 Button=Object:new{
-  c2={255,255,255,255},
-  hc={255,200,200,255},
+  c2={1.0,1.0,1.0,1.0},
+  hc={1.0,200/255,200/255,1.0},
   draw=function(self)
     if self.fnt==nil then self.fnt=love.graphics.newFont(self.ts) end
     love.graphics.setFont(self.fnt)
@@ -129,7 +129,7 @@ PicButton=Button:new{
   end,
   draw=function(self)
     if not self.hover then
-      love.graphics.setColor({255,255,255,255})
+      love.graphics.setColor({1.0,1.0,1.0,1.0})
     else
       love.graphics.setColor(self.hc)
     end
@@ -138,7 +138,7 @@ PicButton=Button:new{
 }
 
 IBox=Object:new{
-  c2={255,200,200,255},
+  c2={1.0,200/255,200/255,1.0},
   text="",
   time=.075,
   type="ibox",
@@ -207,7 +207,7 @@ IBox=Object:new{
 }
 
 Menu=Object:new{
-  c2={200,200,200,255},
+  c2={200/255,200/255,200/255,1.0},
   bth=20,
   new=function(self,o,b)
     local o=o or {}

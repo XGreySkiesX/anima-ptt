@@ -1,6 +1,6 @@
 local platform1={
 	img="Levels/ch1/shared/Graphics/Tiles/platform1.png",
-	color={r=255,g=242,b=0},
+	color={r=1.0,g=242/255,b=0},
 	coords={
 	left={0,0,32,16},
 	middle={32,0,32,16},
