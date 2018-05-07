@@ -1,6 +1,9 @@
 local Display={}
 z={}
 
+printc=function(string,fnt,x,y)
+love.graphics.print(string,x-fnt:getWidth(string)/2,y-fnt:getHeight()/2)
+end
 Object={
   fetchcode="",
   type="",

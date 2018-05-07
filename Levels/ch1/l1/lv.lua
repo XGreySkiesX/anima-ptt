@@ -3,7 +3,7 @@ progress=0,
 bgsrc="Levels/ch1/l1/bg.png",
 lvsrc="Levels/ch1/l1/level.png",
 lvname="ch1l1",
-tile_sources={grass="Levels.ch1.shared.Graphics.Tiles.grass",platform1="Levels.ch1.shared.Graphics.Tiles.platform1",sky3="Levels.ch1.shared.Graphics.Tiles.sky3"},
+tile_sources={grass="Levels.ch1.shared.Graphics.Tiles.grass",platform1="Levels.ch1.shared.Graphics.Tiles.platform1",sky3="Levels.ch1.shared.Graphics.Tiles.sky3",jungle_bg="Levels.ch1.shared.Graphics.Backgrounds.jungle"},
 bgm_srcs={{"M/Audio/Music/test.wav",83.6,131.7},{"M/Audio/Music/8bitMain.ogg",48,77.35}},
 tdone=true,
 setup=function(self)
@@ -14,11 +14,11 @@ self.thread=love.thread.newThread([[
 	local bgsrc,lvsrc,tsrcs,lvname=...
 	local tilesheet=TSheet:new{srcs=tsrcs}
 	local bgmap=Map:new{src=bgsrc,sheet=tilesheet}
-	love.thread.getChannel('bgm_t_'..lvname):push(bgmap.tiles)
+	love.thread.getChannel('bgm_t_'..lvname):supply(bgmap.tiles)
 
 	local map=Map:new{src=lvsrc,sheet=tilesheet}
-	love.thread.getChannel('mp_t_'..lvname):push(map.tiles)
-	love.thread.getChannel('mp_p_'..lvname):push(map.platforms)
+	love.thread.getChannel('mp_t_'..lvname):supply(map.tiles)
+	love.thread.getChannel('mp_p_'..lvname):supply(map.platforms)
 
 	]])
 self.tilesheet=TSheet:new{srcs=tile_sources}
@@ -28,9 +28,9 @@ self.thread:start(self.bgsrc,self.lvsrc,self.tile_sources,self.lvname)
 end,
 load=function(self)
 		local channels={}
-		channels.a=love.thread.getChannel('bgm_t_'..self.lvname):pop()
-		channels.b=love.thread.getChannel('mp_t_'..self.lvname):pop()
-		channels.c=love.thread.getChannel('mp_p_'..self.lvname):pop()
+		channels.a=love.thread.getChannel('bgm_t_'..self.lvname):demand()
+		channels.b=love.thread.getChannel('mp_t_'..self.lvname):demand()
+		channels.c=love.thread.getChannel('mp_p_'..self.lvname):demand()
 		if channels.a and channels.b and channels.c then
 			self.bgmap.tiles=channels.a
 			self.map.tiles=channels.b
@@ -49,7 +49,7 @@ load=function(self)
 			self.shader=love.graphics.newShader(self.scode)
 			self:msg_init()
 			self.tmr=0
-			self.soundlist[1]:play(.3)
+			self.soundlist[1]:play(.4)
 			self.thread=nil
 			self.loaded=true
 		elseif channels.a and not channels.b then
@@ -59,7 +59,7 @@ load=function(self)
 		end
 end,
 upd_func=function(self)
-self.tmr=love.timer.getTime()
+self.tmr=self.tmr+love.timer.getDelta()
 self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
 self.shader:send("offset",{self.camera.x,self.camera.y,0})
 self.shader:send("timer",self.tmr)
@@ -119,19 +119,19 @@ if(pix.r==0.0 && pix.g==1.0 && pix.b==1.0){
 pix.a=0.0;
 }
 if((pix.r==1.0 && pix.g==1.0 && pix.b==1.0)){
-	pix.rgb=vec3( abs( random(window_coords/timer)*(abs(sin(timer/2))<.5 ? .5 : abs(sin(timer/2))) ) );
+	pix.rgb=vec3( mix(0.2,1.0,abs(sin(random(window_coords+(offset))*timer*5))) );
 }else if (pix.r==1.0 && pix.g==0.0 && pix.b==0.0){
 	pix.r=( abs(tan(timer/2))<.3 ? .3 : abs(tan(timer/2)) );
 } else {
 	if(distance(window_coords,p_coords-offset)<mix(90,100,abs(cos(timer))/2)){
 		pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/100),.3,10);
-		//pix.r=1.5*pix.r;
+		pix.r=1.3*pix.r;
 
 	} else {
 		pix.rgb=.05*pix.rgb;
-		//pix.b=3*pix.b;
+		pix.b=3*pix.b;
 	}
-	
+
 	//pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/mix(75,100,abs(sin(timer)))),0.3,5);
 }
 return pix;

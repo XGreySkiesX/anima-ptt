@@ -67,7 +67,7 @@ function Game:update(dt)
 			if tmr>1 then
 				if txt=="." then txt=".."
 				elseif txt==".." then txt="..."
-				else txt="." 
+				else txt="."
 				end
 
 				tmr=0
@@ -96,6 +96,7 @@ function Game:draw()
 			love.graphics.setColor(1,1,1)
 			love.graphics.setFont(font)
 			love.graphics.print("Loading"..txt,love.graphics.getWidth()/2-font:getWidth("Loading"..txt)/2,love.graphics.getHeight()/2-font:getHeight()/2)
+			if Game.L.err then love.graphics.print(Game.L.err) end
 		end
 end
 

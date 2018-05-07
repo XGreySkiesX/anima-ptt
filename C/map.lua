@@ -69,8 +69,8 @@ Map={
 
 							curtile.type=i
 							curtile.w,curtile.h,curtile.q,curtile.drawtop,curtile.isplat,curtile.shader=o.sheet[i].handle(o.sheet[i],pix,above,below,left,right)
-							curtile.x=x*o.tilesize
-							curtile.y=y*o.tilesize
+							curtile.x=x*o.tilesize*(curtile.w/o.tilesize)
+							curtile.y=y*o.tilesize*(curtile.w/o.tilesize)
 							o.consectiles=o.consectiles+1
 							break
 						end

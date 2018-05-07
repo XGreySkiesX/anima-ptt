@@ -106,7 +106,7 @@ Level={
 			self.camera:update()
 		end
 		self.player:draw()
-		
+
 		love.graphics.setShader()
 		for i,v in ipairs(self.objects) do
 			if v.type~="player" and v.type~="ground" and v.type~="platform" then
@@ -214,23 +214,23 @@ Level={
 		if Objects.isItem(c_obj) and self.camera~=nil and (self.hscroll or self.vscroll) then
 			if self.camera.x>=0 and self.camera.x<=(self.w-love.graphics.getWidth())*self.camera.sx then
 			self.camera:set((c_obj.body.center.x-love.graphics.getWidth()/2),self.camera.y)
-		end
-		if self.camera.y>=0 and self.camera.y<=(self.h-love.graphics.getHeight())*self.camera.sy then
-			self.camera:set(self.camera.x,(c_obj.body.center.y-love.graphics.getHeight()/2))
-		end
-		if self.camera.x<0 then
-			self.camera:set(0,self.camera.y)
-		end
-		if self.camera.x>(self.w-love.graphics.getWidth())*self.camera.sx then
-			self.camera:set((self.w-love.graphics.getWidth())*self.camera.sx,self.camera.y)
-		end
-		if self.camera.y<0 then
-			self.camera:set(self.camera.x,0)
-		end
-		if self.camera.y>(self.h-love.graphics.getHeight())*self.camera.sy then
-			self.camera:set(self.camera.x,(self.h-love.graphics.getHeight())*self.camera.sy)
-		end
-			self.camera:update()
+			end
+			if self.camera.y>=0 and self.camera.y<=(self.h-love.graphics.getHeight())*self.camera.sy then
+				self.camera:set(self.camera.x,(c_obj.body.center.y-love.graphics.getHeight()/2))
+			end
+			if self.camera.x<0 then
+				self.camera:set(0,self.camera.y)
+			end
+			if self.camera.x>(self.w-love.graphics.getWidth())*self.camera.sx then
+				self.camera:set((self.w-love.graphics.getWidth())*self.camera.sx,self.camera.y)
+			end
+			if self.camera.y<0 then
+				self.camera:set(self.camera.x,0)
+			end
+			if self.camera.y>(self.h-love.graphics.getHeight())*self.camera.sy then
+				self.camera:set(self.camera.x,(self.h-love.graphics.getHeight())*self.camera.sy)
+			end
+				self.camera:update()
 		end
 	end,
 	player_dead=function(self,pln)
