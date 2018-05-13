@@ -1,3 +1,5 @@
+require "C.shapes"
+
 local Obj={}
 --check if something is valid as an item
 function Obj.isItem(i)

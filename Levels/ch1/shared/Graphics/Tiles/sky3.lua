@@ -6,13 +6,15 @@ local sky3={
 		{0,0,64,64},
 		{64,0,64,64},
 		{0,64,64,64},
-		{0,192,64,64}
+		{0,192,64,64},
+		{64,192,64,64}
 		},
 		right={
 		{128,0,64,64},
 		{192,0,64,64},
 		{192,64,64,64},
-		{192,192,64,64}
+		{192,192,64,64},
+		{128,192,64,64}
 		},
 		center={
 		{64,64,64,64},
@@ -22,20 +24,28 @@ local sky3={
 		}
 	},
 	handle=function(self,c_tl,t_tl,b_tl,l_tl,r_tl)
-	-- if t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b then
-	-- 	return self.coords.dirt[3],self.coords.dirt[4],self.coords.dirt,false,true,self.shader
-	-- elseif (l_tl.r==c_tl.r and l_tl.g==c_tl.g and l_tl.b==c_tl.b) and (r_tl.r==c_tl.r and r_tl.g==c_tl.g and r_tl.b==c_tl.b) then
-	-- 		return self.coords.middle[3],self.coords.middle[4],self.coords.middle,true,true,self.shader
-	-- elseif (l_tl.r==c_tl.r and l_tl.g==c_tl.g and l_tl.b==c_tl.b) then
-	-- 		return self.coords.right[3],self.coords.right[4],self.coords.right,false,true,self.shader
-	-- elseif (r_tl.r==c_tl.r and r_tl.g==c_tl.g and r_tl.b==c_tl.b) then
-	-- 	return self.coords.left[3],self.coords.right[4],self.coords.left,false,true,self.shader
-	-- else
-	-- 	return self.coords.single[3],self.coords.single[4],self.coords.single,false,true,self.shader
-	-- end
-	local num=math.random(1,#self.coords)
-	-- return self.coords[num][3],self.coords[num][4],self.coords[num],false,false
-	return self.coords.center[num][3],self.coords.center[num][4],self.coords.center[num],false,false
+	if not (l_tl.r==c_tl.r and l_tl.g==c_tl.g and l_tl.b==c_tl.b) then
+		if (t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b) and (b_tl.r==c_tl.r and b_tl.g==c_tl.g and b_tl.b==c_tl.b) then
+			return self.coords.left[3][3],self.coords.left[3][4],self.coords.left[3],false,false,self.shader
+		elseif (t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b) then
+			return self.coords.left[4][3],self.coords.left[4][4],self.coords.left[4],false,false,self.shader
+		elseif (b_tl.r==c_tl.r and b_tl.g==c_tl.g and b_tl.b==c_tl.b) then
+			return self.coords.left[1][3],self.coords.left[1][4],self.coords.left[1],false,false,self.shader
+		end
+	elseif not (r_tl.r==c_tl.r and r_tl.g==c_tl.g and r_tl.b==c_tl.b) then
+		if (t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b) and (b_tl.r==c_tl.r and b_tl.g==c_tl.g and b_tl.b==c_tl.b) then
+			return self.coords.right[3][3],self.coords.right[3][4],self.coords.right[3],false,false,self.shader
+		elseif (t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b) then
+			return self.coords.right[4][3],self.coords.right[4][4],self.coords.right[4],false,false,self.shader
+		elseif (b_tl.r==c_tl.r and b_tl.g==c_tl.g and b_tl.b==c_tl.b) then
+			return self.coords.right[2][3],self.coords.right[2][4],self.coords.right[2],false,false,self.shader
+		end
+	elseif not (t_tl.r==c_tl.r and t_tl.g==c_tl.g and t_tl.b==c_tl.b) then
+		return self.coords.left[2][3],self.coords.left[2][4],self.coords.left[2],false,false,self.shader
+	elseif not (b_tl.r==c_tl.r and b_tl.g==c_tl.g and b_tl.b==c_tl.b) then
+			return self.coords.right[5][3],self.coords.right[5][4],self.coords.right[5],false,false,self.shader
+	end
+		return self.coords.center[1][3],self.coords.center[1][4],self.coords.center[1],false,false,self.shader
 	end
 }
 return sky3

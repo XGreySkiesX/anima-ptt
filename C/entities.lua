@@ -1,3 +1,5 @@
+require "C.shapes"
+
 Entity={
 	src="",
 	name="default",
@@ -5,7 +7,6 @@ Entity={
 	y=0,
 	w=10,
 	h=10,
-
 	c={255,255,255,255},
 	src="",
 	static=false,

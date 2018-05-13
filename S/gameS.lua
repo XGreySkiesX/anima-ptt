@@ -22,6 +22,7 @@ function Game:enter()
 				Game:enter()
 			end, fetchcode="rs_btn"
 		}
+		px,py=0,1
 
 		Game.L=Level:new{src="ch1/l1/lv"}
 		Game.L:setup()
@@ -59,10 +60,13 @@ end
 
 function Game:update(dt)
 		if Game.loaded then
+			td=td+dt
 			Game.L:update(dt)
 			Display.update()
 		else
-
+			if coroutine.status(Game.L.core)~="dead" then
+				_,px,py=coroutine.resume(Game.L.core)
+			end
 			tmr=tmr+dt
 			if tmr>1 then
 				if txt=="." then txt=".."
@@ -96,7 +100,10 @@ function Game:draw()
 			love.graphics.setColor(1,1,1)
 			love.graphics.setFont(font)
 			love.graphics.print("Loading"..txt,love.graphics.getWidth()/2-font:getWidth("Loading"..txt)/2,love.graphics.getHeight()/2-font:getHeight()/2)
-			if Game.L.err then love.graphics.print(Game.L.err) end
+			if px~=nil and py~=nil then
+				love.graphics.rectangle("line",0,0,love.graphics.getWidth(),20)
+				love.graphics.rectangle("fill",0,0,math.floor((px/py)*love.graphics.getWidth()),20)
+			end
 		end
 end
 
