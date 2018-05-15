@@ -61,6 +61,7 @@ end
 function Game:update(dt)
 		if Game.loaded then
 			td=td+dt
+			Sprites.update(dt)
 			Game.L:update(dt)
 			Display.update()
 		else

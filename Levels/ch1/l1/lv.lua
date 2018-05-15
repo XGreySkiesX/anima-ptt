@@ -9,7 +9,6 @@ tdone=true,
 setup=function(self)
 self.core=coroutine.create(
 	function(...)
-		--coroutine.yield()
 		self.tilesheet=TSheet:new{srcs=self.tsrcs}
 		self.bgmap=Map:new{src=self.bgsrc,sheet=self.tilesheet}
 		self.map=Map:new{src=self.lvsrc,sheet=self.tilesheet}
@@ -54,14 +53,21 @@ objects={
 	x=100,
 	y=900,
 	w=32,
-	h=64,
+	h=32,
 	gravity=100,
 	y_velocity=0,
 	max_y=200,
 	speed=200,
 	name="player",
 	ground=0,
-	src="Levels/ch1/shared/Graphics/Sprites/player.png",
+	sprite=AnimSprite:new{animated=true,src="Levels/ch1/shared/Graphics/Sprites/player.png",
+		qs={
+		left={{0,0,32,32},{32,0,32,32},{64,0,32,32},{96,0,32,32}},
+		right={{0,32,32,32},{32,32,32,32},{64,32,32,32},{96,32,32,32}},
+		idler={{0,64,32,32},{32,64,32,32},{64,64,32,32},{96,64,32,32}},
+		idlel={{0,96,32,32},{32,96,32,32},{64,96,32,32},{96,96,32,32}}
+		},
+		spd=.5,tp="idler",ptp="idler",ind=true},
 	jump_height=210
 	}
 },

@@ -1,4 +1,5 @@
 require "C.shapes"
+require "C.sprites"
 
 local Obj={}
 --check if something is valid as an item
@@ -108,17 +109,21 @@ Item={
 		self.__index=self
 		o.dc=o.c
 		if o.src~="" then
-			o.img=love.graphics.newImage(o.src)
-			o.w=o.img:getWidth()
-			o.h=o.img:getHeight()
+			--do stuff w/ type: if type==table then make a static or anim sprite; if type==string then just make a regular image
+				o.img=love.graphics.newImage(o.src)
+				o.w=o.img:getWidth()
+				o.h=o.img:getHeight()
 		end
 		o.body=Rect:new{x=o.x,y=o.y,w=o.w,h=o.h}
 		return o
 	end,
-	draw=function(self)
+	draw=function(self,tp)
 		if self.img~=nil then
 			love.graphics.setColor(self.c)
 			love.graphics.draw(self.img,self.body.tl.x,self.body.tl.y)
+		elseif self.sprite~=nil then
+			love.graphics.setColor(self.c)
+			self.sprite:draw(self.body.tl.x,self.body.tl.y,tp)
 		else
 			love.graphics.setColor(self.c)
 			love.graphics.rectangle(self.mode,self.body.tl.x,self.body.tl.y,self.w,self.h)
@@ -160,15 +165,6 @@ Item={
 		self.text="Not colliding"
 	end,
 	update=function(self,dt)
-		--[[if self.body.tl.x<=0 then
-			self.body:translate(Vector:new(0,self.body.min.y))
-		end
-		if self.body.bl.y>=self.absolute_y then
-			self.body:translate(Vector:new(self.body.min.x,self.absolute_y-self.h))
-		end
-		if self.body.tr.x>=self.absolute_x then
-			self.body:translate(Vector:new(self.absolute_x-self.w,self.body.min.y))
-		end]]
 	end
 }
 
