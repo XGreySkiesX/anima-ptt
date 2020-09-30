@@ -1,6 +1,6 @@
 local TS={}
-
-StaticTileSprite={
+td=0
+STSp={
 	w=16,
 	h=16,
 	q={},
@@ -13,7 +13,7 @@ StaticTileSprite={
 	end
 }
 
-AnimatedTileSprite=StaticTileSprite:new{}
+ATSp=STSp:new{}
 
 TSheet={
 	static_tiles={},

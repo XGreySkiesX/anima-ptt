@@ -2,4 +2,7 @@ TODO:
 
 - Rewrite Level{} so that maps, etc are loaded automatically?
 - Rewrite code so that player can push things without penetrating walls (if against block for so long?)
-- Probably rewrite how to handle collisions in general (instead of pulling self out of object, move object around self...?)
+- Sprites loaded automatically on object creation
+- Enemies and AI
+- Collectibles
+- Work on map events like doors and teleportation
