@@ -43,12 +43,10 @@ load=function(self)
 		end
 end,
 upd_func=function(self)
-self.start = love.timer.getTime()
-self.tmr=love.timer.getTime() - self.start
--- self.tmr=self.tmr+love.timer.getDelta();
-self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
-self.shader:send("offset",{self.camera.x,self.camera.y,0})
-self.shader:send("timer",self.tmr)
+	self.tmr=self.tmr+love.timer.getDelta()
+	self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
+	self.shader:send("offset",{self.camera.x,self.camera.y,0})
+	self.shader:send("timer",self.tmr)
 end,
 objects={
 	Player:new{
