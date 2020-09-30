@@ -158,7 +158,7 @@ Level={
 	if self.paused then return end
 		if key=="space" and not self.tdone then
 			if self.msgs[self.adv].td then
-		      self.msgs[self.adv].advance:play()
+		      self.msgs[self.adv].advance:play(self.msgs[self.adv].vol)
 		      self.msgs[self.adv]:hide()
 		      self.msgs[self.adv]:reset()
 		      self.adv=self.adv+1

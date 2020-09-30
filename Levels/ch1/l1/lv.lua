@@ -59,7 +59,9 @@ load=function(self)
 		end
 end,
 upd_func=function(self)
-self.tmr=love.timer.getTime()
+self.start = love.timer.getTime()
+self.tmr=love.timer.getTime() - self.start
+-- self.tmr=self.tmr+love.timer.getDelta();
 self.shader:send("p_coords",{self.player.body.center.x,self.player.body.center.y,0})
 self.shader:send("offset",{self.camera.x,self.camera.y,0})
 self.shader:send("timer",self.tmr)
@@ -125,14 +127,11 @@ if((pix.r==1.0 && pix.g==1.0 && pix.b==1.0)){
 } else {
 	if(distance(window_coords,p_coords-offset)<mix(90,100,abs(cos(timer))/2)){
 		pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/100),.3,10);
-		//pix.r=1.5*pix.r;
-
+		pix.r=1.3*pix.r;
 	} else {
 		pix.rgb=.05*pix.rgb;
-		//pix.b=3*pix.b;
+		pix.b=3*pix.b;
 	}
-	
-	//pix.rgb=(pix.rgb/5)/clamp((distance(window_coords,p_coords-offset)/mix(75,100,abs(sin(timer)))),0.3,5);
 }
 return pix;
 }

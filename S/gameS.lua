@@ -90,7 +90,7 @@ function Game:draw()
 			end
 			love.graphics.setColor(1,1,1)
 			love.graphics.setFont(font)
-			love.graphics.print(Game.L.objects[2].body.tl.y,0,50)
+			love.graphics.print(Game.L.objects[1].body.tl.y,0,50)
 			Display.all()
 		else
 			love.graphics.setColor(1,1,1)
